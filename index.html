@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>❤️Will You Be My Valentine Kunju❤️</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffe0e9;
+      font-family: 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 50px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      max-width: 90%;
+      margin: 100px auto 50px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #e91e63;
+      margin-bottom: 30px;
+    }
+
+    .typing {
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid #e91e63;
+      animation: typing 3s steps(40, end), blink 0.7s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink {
+      from, to { border-color: transparent }
+      50% { border-color: #e91e63; }
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #yesBtn {
+      background: #4CAF50;
+      color: white;
+    }
+
+    #yesBtn:hover {
+      background: #45a049;
+    }
+
+    #noBtn {
+      background: #f44336;
+      color: white;
+      position: absolute;
+    }
+
+    #musicToggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      z-index: 20;
+    }
+
+    canvas, .hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      display: none;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      font-size: 1.5em;
+      color: #e91e63;
+    }
+
+    .chatbox {
+      position: fixed;
+      bottom: 80px;
+      left: 20px;
+      width: 300px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      max-height: 400px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #eee;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      outline: none;
+    }
+
+    .chat-input button {
+      padding: 10px 15px;
+      background: #e91e63;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-bottom: 10px;
+    }
+
+    .user { text-align: right; color: #333; }
+    .bot { text-align: left; color: #e91e63; font-style: italic; }
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="hearts"></div>
+  <div class="container">
+    <h1 class="typing">Will you be my valentine Kunju💖</h1>
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+  </div>
+
+  <div class="modal" id="loveModal">
+    <div class="modal-content">
+      💘 ponne anikke nine orupadee esttam ane.forever i will be with you💘<br/>I love you forever ❤️
+    </div>
+  </div>
+
+  <button id="musicToggle">🔊 Music</button>
+  <audio id="bgMusic" src="paro.mp3" autoplay loop></audio>
+
+  <div class="chatbox">
+    <div class="chat-messages" id="chatLog"></div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Say something sweet...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const loveModal = document.getElementById("loveModal");
+    const audio = document.getElementById("bgMusic");
+    const musicToggle = document.getElementById("musicToggle");
+
+    noBtn.addEventListener("mouseover", () => {
+      const i = Math.floor(Math.random() * (window.innerWidth - 100));
+      const j = Math.floor(Math.random() * (window.innerHeight - 50));
+      noBtn.style.left = `${i}px`;
+      noBtn.style.top = `${j}px`;
+    });
+
+    musicToggle.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+        musicToggle.textContent = '🔊 Music';
+      } else {
+        audio.pause();
+        musicToggle.textContent = '🔇 Music';
+      }
+    });
+
+    yesBtn.addEventListener("click", () => {
+      confettiStart();
+      loveModal.style.display = "flex";
+    });
+
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let confetti = [];
+    for (let i = 0; i < 300; i++) {
+      confetti.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 2,
+        d: Math.random() * 5 + 2,
+        color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+      });
+    }
+    function drawConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach(c => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fillStyle = c.color;
+        ctx.fill();
+      });
+      updateConfetti();
+    }
+    function updateConfetti() {
+      confetti.forEach(c => {
+        c.y += c.d;
+        if (c.y > canvas.height) {
+          c.y = -10;
+          c.x = Math.random() * canvas.width;
+        }
+      });
+    }
+    let confettiInterval;
+    function confettiStart() {
+      confettiInterval = setInterval(drawConfetti, 20);
+      setTimeout(() => clearInterval(confettiInterval), 6000);
+    }
+
+    // Heart animation
+    const heartsContainer = document.querySelector(".hearts");
+    setInterval(() => {
+      const heart = document.createElement('div');
+      heart.innerText = '💖';
+      heart.style.position = 'absolute';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.top = '100vh';
+      heart.style.fontSize = Math.random() * 24 + 16 + 'px';
+      heart.style.animation = 'floatUp 5s linear forwards';
+      heartsContainer.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }, 400);
+
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `
+      @keyframes floatUp {
+        0% { transform: translateY(0); opacity: 1; }
+        100% { transform: translateY(-120vh); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(styleSheet);
+
+    window.addEventListener('click', () => {
+      if (audio.paused) audio.play();
+    }, { once: true });
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Romantic chatbot logic
+    const chatLog = document.getElementById("chatLog");
+    const userInput = document.getElementById("userInput");
+
+    function sendMessage() {
+      const msg = userInput.value.trim();
+      if (!msg) return;
+      appendMessage('user', msg);
+      userInput.value = '';
+      setTimeout(() => replyMessage(msg), 1000);
+    }
+
+    function appendMessage(sender, text) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `message ${sender}`;
+      msgDiv.textContent = text;
+      chatLog.appendChild(msgDiv);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function replyMessage(msg) {
+      const replies = [
+        "Awww that's so sweet ❤️",
+        "You're my favorite person 🌹",
+        "I can't stop smiling 😍",
+        "You're the reason my heart beats 💓",
+        "Hehe, I was just thinking about you 😘",
+        "Tell me more... I'm listening 💬"
+      ];
+      const reply = replies[Math.floor(Math.random() * replies.length)];
+      appendMessage('bot', reply);
+    }
+  </script>
+</body>
+</html>
